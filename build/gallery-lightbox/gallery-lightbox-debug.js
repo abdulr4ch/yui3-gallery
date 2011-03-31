@@ -730,4 +730,4 @@ YUI.add('gallery-lightbox', function(Y) {
 	};
 
 
-}, 'gallery-2010.03.16-20' ,{requires:['base','node','anim']});
+}, 'gallery-2010.04.08-12-35' ,{requires:['base','node','anim','selector-css3']});

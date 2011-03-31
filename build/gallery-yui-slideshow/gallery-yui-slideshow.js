@@ -374,5 +374,9 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 	}; // Y.Slideshow()
 
 
+<<<<<<< HEAD
 
 }, '@VERSION@' ,{requires:['anim']});
+=======
+}, 'gallery-2010.03.23-17-54' ,{requires:['anim']});
+>>>>>>> upstream/master
