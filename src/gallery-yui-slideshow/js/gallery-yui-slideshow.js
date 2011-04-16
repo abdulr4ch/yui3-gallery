@@ -1,11 +1,11 @@
-
+	
 	/**
 	* A simple YUI3 slideshow kit inspired by the jQuery Cycle plugin.
 	* @module gallery-yui-slideshow
 	* @requires widget, transition, event-mouseenter
 	* @author Josh Lizarraga
 	*/
-
+	
 	/**
 	* @class Slideshow
 	* @constructor
@@ -1077,5 +1077,5 @@
 		
 	});
 	
-	Y.Slideshow = Slideshow;	
+	Y.Slideshow = Slideshow;
 	
