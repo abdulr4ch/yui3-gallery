@@ -1,14 +1,15 @@
 YUI.add('gallery-yui-slideshow', function(Y) {
 
-
+	
 	/**
 	* A simple YUI3 slideshow kit inspired by the jQuery Cycle plugin.
 	* @module gallery-yui-slideshow
 	* @requires widget, transition, event-mouseenter
 	* @author Josh Lizarraga
 	*/
-
+	
 	/**
+	* A simple YUI3 slideshow kit inspired by the jQuery Cycle plugin.
 	* @class Slideshow
 	* @constructor
 	* @param {Object} config Widget configuration object.
@@ -81,7 +82,7 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Both slides slide from right to left.
-		* @property PRESETS.slideRight
+		* @property PRESETS.slideLeft
 		* @type Preset Slide Transition
 		*/
 		slideLeft: {
@@ -218,8 +219,8 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		},
 		
 		/**
-		* Node/selector string for the element whose children correspond to slides.
-		* This setting works best with an ordered list of links.
+		* NodeList/selector string for the elements that correspond to slides.
+		* This setting works best with list items.
 		* @attribute pages
 		* @type Mixed
 		* @default null
@@ -681,8 +682,7 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Pauses the slideshow momentarily if not already paused.
-		* @method _hoverpause
-		* @protected
+		* @event _hoverpause
 		* @param {Event} e The Event object.
 		*/
 		_hoverpause: function(e){
@@ -699,8 +699,7 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Plays the slideshow if it was hoverpaused.
-		* @method _hoverplay
-		* @protected
+		* @event _hoverplay
 		* @param {Event} e The Event object.
 		*/
 		_hoverplay: function(e){
@@ -715,8 +714,7 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Advances the slideshow by one slide.
-		* @method _next
-		* @protected
+		* @event _next
 		* @param {Event} e The Event object.
 		*/
 		_next: function(e){
@@ -733,8 +731,7 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Pauses the slideshow.
-		* @method _pause
-		* @protected
+		* @event _pause
 		* @param {Event} e The Event object.
 		*/
 		_pause: function(e){
@@ -751,8 +748,7 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Plays the slideshow.
-		* @method _play
-		* @protected
+		* @event _play
 		* @param {Event} e The Event object.
 		*/
 		_play: function(e){
@@ -771,8 +767,7 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Reverses the slideshow by one slide.
-		* @method _previous
-		* @protected
+		* @event _previous
 		* @param {Event} e The Event object.
 		*/
 		_previous: function(e){
@@ -829,9 +824,10 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Performs the slide transition.
-		* @method _slide
+		* @event _slide
+		* @param {Event} e The Event object.
 		*/
-		_slide: function(){
+		_slide: function(e){
 			
 			var $that				= this,
 				$slideTransition	= this.get('transition'),
@@ -930,10 +926,10 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Calls setTimeout for autoplay.
-		* @method _timeout
-		* @protected
+		* @event _timeout
+		* @param {Event} e The Event object.
 		*/
-		_timeout: function(){
+		_timeout: function(e){
 			
 			var $that		= this,
 				$interval	= this.get('interval');
@@ -1017,7 +1013,7 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 		/**
 		* Sets initial widget state.
-		* @method bindUI
+		* @method syncUI
 		*/
 		syncUI: function(){
 			
@@ -1079,7 +1075,7 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 		
 	});
 	
-	Y.Slideshow = Slideshow;	
+	Y.Slideshow = Slideshow;
 	
 
 

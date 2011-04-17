@@ -7,6 +7,7 @@
 	*/
 	
 	/**
+	* A simple YUI3 slideshow kit inspired by the jQuery Cycle plugin.
 	* @class Slideshow
 	* @constructor
 	* @param {Object} config Widget configuration object.
@@ -79,7 +80,7 @@
 		
 		/**
 		* Both slides slide from right to left.
-		* @property PRESETS.slideRight
+		* @property PRESETS.slideLeft
 		* @type Preset Slide Transition
 		*/
 		slideLeft: {
@@ -216,8 +217,8 @@
 		},
 		
 		/**
-		* Node/selector string for the element whose children correspond to slides.
-		* This setting works best with an ordered list of links.
+		* NodeList/selector string for the elements that correspond to slides.
+		* This setting works best with list items.
 		* @attribute pages
 		* @type Mixed
 		* @default null
@@ -679,8 +680,7 @@
 		
 		/**
 		* Pauses the slideshow momentarily if not already paused.
-		* @method _hoverpause
-		* @protected
+		* @event _hoverpause
 		* @param {Event} e The Event object.
 		*/
 		_hoverpause: function(e){
@@ -697,8 +697,7 @@
 		
 		/**
 		* Plays the slideshow if it was hoverpaused.
-		* @method _hoverplay
-		* @protected
+		* @event _hoverplay
 		* @param {Event} e The Event object.
 		*/
 		_hoverplay: function(e){
@@ -713,8 +712,7 @@
 		
 		/**
 		* Advances the slideshow by one slide.
-		* @method _next
-		* @protected
+		* @event _next
 		* @param {Event} e The Event object.
 		*/
 		_next: function(e){
@@ -731,8 +729,7 @@
 		
 		/**
 		* Pauses the slideshow.
-		* @method _pause
-		* @protected
+		* @event _pause
 		* @param {Event} e The Event object.
 		*/
 		_pause: function(e){
@@ -749,8 +746,7 @@
 		
 		/**
 		* Plays the slideshow.
-		* @method _play
-		* @protected
+		* @event _play
 		* @param {Event} e The Event object.
 		*/
 		_play: function(e){
@@ -769,8 +765,7 @@
 		
 		/**
 		* Reverses the slideshow by one slide.
-		* @method _previous
-		* @protected
+		* @event _previous
 		* @param {Event} e The Event object.
 		*/
 		_previous: function(e){
@@ -827,9 +822,10 @@
 		
 		/**
 		* Performs the slide transition.
-		* @method _slide
+		* @event _slide
+		* @param {Event} e The Event object.
 		*/
-		_slide: function(){
+		_slide: function(e){
 			
 			var $that				= this,
 				$slideTransition	= this.get('transition'),
@@ -928,10 +924,10 @@
 		
 		/**
 		* Calls setTimeout for autoplay.
-		* @method _timeout
-		* @protected
+		* @event _timeout
+		* @param {Event} e The Event object.
 		*/
-		_timeout: function(){
+		_timeout: function(e){
 			
 			var $that		= this,
 				$interval	= this.get('interval');
@@ -1015,7 +1011,7 @@
 		
 		/**
 		* Sets initial widget state.
-		* @method bindUI
+		* @method syncUI
 		*/
 		syncUI: function(){
 			
