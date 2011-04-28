@@ -1,0 +1,1171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>API: gallery-yui-slideshow   gallery-yui-slideshow.js  (YUI Library)</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1303004194.87" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1303004194.87" />
+
+    <script type="text/javascript" src="assets/api-js?stamp=1303004194.87"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1303004194.87"></script>
+</head>
+
+<body id="yahoo-com">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="http://developer.yahoo.com/yui/" title="Yahoo! UI Library">Yahoo! UI Library</a></h1>
+        <h3>gallery-yui-slideshow&nbsp; <span class="subtitle">2.1.0</span></h3>
+        <a href="./index.html" title="Yahoo! UI Library">Yahoo! UI Library</a> 
+            &gt; <a href="./module_gallery-yui-slideshow.html" title="gallery-yui-slideshow">gallery-yui-slideshow</a>
+                
+                 &gt; gallery-yui-slideshow.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+<div class="highlight"><pre>	
+	<span class="cm">/**</span>
+<span class="cm">	* A simple YUI3 slideshow kit inspired by the jQuery Cycle plugin.</span>
+<span class="cm">	* @module gallery-yui-slideshow</span>
+<span class="cm">	* @requires widget, transition, event-mouseenter</span>
+<span class="cm">	* @author Josh Lizarraga</span>
+<span class="cm">	*/</span>
+	
+	<span class="cm">/**</span>
+<span class="cm">	* A simple YUI3 slideshow kit inspired by the jQuery Cycle plugin.</span>
+<span class="cm">	* @class Slideshow</span>
+<span class="cm">	* @constructor</span>
+<span class="cm">	* @param {Object} config Widget configuration object.</span>
+<span class="cm">	*/</span>
+	<span class="kd">var</span> <span class="nx">Slideshow</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">){</span>
+		
+		<span class="nx">Slideshow</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+		
+	<span class="p">};</span>
+	
+	<span class="cm">/**</span>
+<span class="cm">	* @property NAME</span>
+<span class="cm">	* @type String</span>
+<span class="cm">	* @default Slideshow</span>
+<span class="cm">	*/</span>
+	<span class="nx">Slideshow</span><span class="p">.</span><span class="nx">NAME</span> <span class="o">=</span> <span class="s1">&#39;Slideshow&#39;</span><span class="p">;</span>
+	
+	<span class="cm">/* ! Slideshow.PRESETS */</span>
+	
+	<span class="nx">Slideshow</span><span class="p">.</span><span class="nx">PRESETS</span> <span class="o">=</span> <span class="p">{</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Incoming slide fades in.</span>
+<span class="cm">		* Outgoing slide fades out.</span>
+<span class="cm">		* @property PRESETS.fade</span>
+<span class="cm">		* @type Preset Slide Transition</span>
+<span class="cm">		*/</span>
+		<span class="nx">fade</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">slideIn</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">opacity</span><span class="o">:</span> <span class="mi">0</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">opacity</span><span class="o">:</span> <span class="mi">1</span>
+				<span class="p">}</span>
+			<span class="p">},</span>
+			<span class="nx">slideOut</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">opacity</span><span class="o">:</span> <span class="mi">1</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">opacity</span><span class="o">:</span> <span class="mi">0</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Both slides slide from top to bottom.</span>
+<span class="cm">		* @property PRESETS.slideDown</span>
+<span class="cm">		* @type Preset Slide Transition</span>
+<span class="cm">		*/</span>
+		<span class="nx">slideDown</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">slideIn</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">bottom</span><span class="o">:</span> <span class="s1">&#39;cH&#39;</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">bottom</span><span class="o">:</span> <span class="s1">&#39;0px&#39;</span>
+				<span class="p">}</span>
+			<span class="p">},</span>
+			<span class="nx">slideOut</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">bottom</span><span class="o">:</span> <span class="s1">&#39;0px&#39;</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">bottom</span><span class="o">:</span> <span class="s1">&#39;-cH&#39;</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Both slides slide from right to left.</span>
+<span class="cm">		* @property PRESETS.slideLeft</span>
+<span class="cm">		* @type Preset Slide Transition</span>
+<span class="cm">		*/</span>
+		<span class="nx">slideLeft</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">slideIn</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">right</span><span class="o">:</span> <span class="s1">&#39;-cW&#39;</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">right</span><span class="o">:</span> <span class="s1">&#39;0px&#39;</span>
+				<span class="p">}</span>
+			<span class="p">},</span>
+			<span class="nx">slideOut</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">right</span><span class="o">:</span> <span class="s1">&#39;0px&#39;</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">right</span><span class="o">:</span> <span class="s1">&#39;cW&#39;</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Both slides slide from bottom to top.</span>
+<span class="cm">		* @property PRESETS.slideUp</span>
+<span class="cm">		* @type Preset Slide Transition</span>
+<span class="cm">		*/</span>
+		<span class="nx">slideUp</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">slideIn</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">top</span><span class="o">:</span> <span class="s1">&#39;cH&#39;</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">top</span><span class="o">:</span> <span class="s1">&#39;0px&#39;</span>
+				<span class="p">}</span>
+			<span class="p">},</span>
+			<span class="nx">slideOut</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">top</span><span class="o">:</span> <span class="s1">&#39;0px&#39;</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">top</span><span class="o">:</span> <span class="s1">&#39;-cH&#39;</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Both slides slide from left to right.</span>
+<span class="cm">		* @property PRESETS.slideRight</span>
+<span class="cm">		* @type Preset Slide Transition</span>
+<span class="cm">		*/</span>
+		<span class="nx">slideRight</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">slideIn</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">left</span><span class="o">:</span> <span class="s1">&#39;-cW&#39;</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">left</span><span class="o">:</span> <span class="s1">&#39;0px&#39;</span>
+				<span class="p">}</span>
+			<span class="p">},</span>
+			<span class="nx">slideOut</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">before</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">left</span><span class="o">:</span> <span class="s1">&#39;0px&#39;</span>
+				<span class="p">},</span>
+				<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+					<span class="nx">left</span><span class="o">:</span> <span class="s1">&#39;cW&#39;</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		
+	<span class="p">};</span>
+	
+	<span class="cm">/* ! Attributes */</span>
+	
+	<span class="nx">Slideshow</span><span class="p">.</span><span class="nx">ATTRS</span> <span class="o">=</span> <span class="p">{</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Slides NodeList instance.</span>
+<span class="cm">		* @attribute slides</span>
+<span class="cm">		* @type NodeList</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">slides</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">null</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Current slide index.</span>
+<span class="cm">		* @attribute currentIndex</span>
+<span class="cm">		* @type Integer</span>
+<span class="cm">		* @default 0</span>
+<span class="cm">		*/</span>
+		<span class="nx">currentIndex</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="mi">0</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Previous slide button Node/NodeList/selector string.</span>
+<span class="cm">		* @attribute previousButton</span>
+<span class="cm">		* @type Mixed</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">previousButton</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">null</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Next slide button Node/NodeList/selector string.</span>
+<span class="cm">		* @attribute nextButton</span>
+<span class="cm">		* @type Mixed</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">nextButton</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">null</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Pause button Node/NodeList/selector string.</span>
+<span class="cm">		* @attribute pauseButton</span>
+<span class="cm">		* @type Mixed</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">pauseButton</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">null</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Play button Node/NodeList/selector string.</span>
+<span class="cm">		* @attribute playButton</span>
+<span class="cm">		* @type Mixed</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">playButton</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">null</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* NodeList/selector string for the elements that correspond to slides.</span>
+<span class="cm">		* This setting works best with list items.</span>
+<span class="cm">		* @attribute pages</span>
+<span class="cm">		* @type Mixed</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">pages</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">null</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Time interval(s) between slide transitions in seconds.</span>
+<span class="cm">		* @attribute interval</span>
+<span class="cm">		* @type Float|Array</span>
+<span class="cm">		* @default 4</span>
+<span class="cm">		*/</span>
+		<span class="nx">interval</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="mi">4</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Set to false to disable autoplay.</span>
+<span class="cm">		* @attribute autoplay</span>
+<span class="cm">		* @type Boolean</span>
+<span class="cm">		* @default true</span>
+<span class="cm">		*/</span>
+		<span class="nx">autoplay</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">true</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Set to false to continue autoplay when the user changes slides.</span>
+<span class="cm">		* @attribute pauseOnChange</span>
+<span class="cm">		* @type Boolean</span>
+<span class="cm">		* @default true</span>
+<span class="cm">		*/</span>
+		<span class="nx">pauseOnChange</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">true</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Set to false to continue playing when the user hovers over the slideshow.</span>
+<span class="cm">		* @attribute pauseOnHover</span>
+<span class="cm">		* @type Boolean</span>
+<span class="cm">		* @default true</span>
+<span class="cm">		*/</span>
+		<span class="nx">pauseOnHover</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">true</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Default duration for slide transitions.</span>
+<span class="cm">		* @attribute duration</span>
+<span class="cm">		* @type Float</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">duration</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="mf">0.5</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Default slide transition easing.</span>
+<span class="cm">		* @attribute easing</span>
+<span class="cm">		* @type String</span>
+<span class="cm">		* @default ease-out</span>
+<span class="cm">		*/</span>
+		<span class="nx">easing</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="s1">&#39;ease-out&#39;</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Default slide transition.</span>
+<span class="cm">		* @attribute transition</span>
+<span class="cm">		* @type Slide Transition</span>
+<span class="cm">		* @default Slideshow.PRESETS.fade</span>
+<span class="cm">		*/</span>
+		<span class="nx">transition</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="nx">Slideshow</span><span class="p">.</span><span class="nx">PRESETS</span><span class="p">.</span><span class="nx">fade</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Default transIn (incoming slide) &quot;before&quot; settings. Sets visibility:visible and z-index:1.</span>
+<span class="cm">		* @attribute transInBefore</span>
+<span class="cm">		* @type Object</span>
+<span class="cm">		* @default (See source)</span>
+<span class="cm">		*/</span>
+		<span class="nx">transInBefore</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">visibility</span><span class="o">:</span>	<span class="s1">&#39;visible&#39;</span><span class="p">,</span>
+				<span class="nx">zIndex</span><span class="o">:</span>		<span class="mi">1</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Default transIn (incoming slide) &quot;after&quot; settings. Sets z-index:2.</span>
+<span class="cm">		* @attribute transInAfter</span>
+<span class="cm">		* @type Object</span>
+<span class="cm">		* @default (See source)</span>
+<span class="cm">		*/</span>
+		<span class="nx">transInAfter</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">zIndex</span><span class="o">:</span> <span class="mi">2</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Default transOut (outgoing slide) &quot;before&quot; settings. Sets z-index:2.</span>
+<span class="cm">		* @attribute transOutBefore</span>
+<span class="cm">		* @type Object</span>
+<span class="cm">		* @default (See source)</span>
+<span class="cm">		*/</span>
+		<span class="nx">transOutBefore</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">zIndex</span><span class="o">:</span> <span class="mi">2</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Default transOut (outgoing slide) &quot;after&quot; settings. Sets visibility:hidden and z-index:-30000.</span>
+<span class="cm">		* @attribute transOutAfter</span>
+<span class="cm">		* @type Object</span>
+<span class="cm">		* @default (See source)</span>
+<span class="cm">		*/</span>
+		<span class="nx">transOutAfter</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="p">{</span>
+				<span class="nx">visibility</span><span class="o">:</span>	<span class="s1">&#39;hidden&#39;</span><span class="p">,</span>
+				<span class="nx">zIndex</span><span class="o">:</span>		<span class="o">-</span><span class="mi">30000</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* The ID returned by autoplay&#39;s setTimeout call.</span>
+<span class="cm">		* @attribute _timeoutID</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @type Integer</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">_timeoutID</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">null</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Paused flag.</span>
+<span class="cm">		* @attribute _isPaused</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @type Boolean</span>
+<span class="cm">		* @default true</span>
+<span class="cm">		*/</span>
+		<span class="nx">_isPaused</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">true</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Hover paused flag.</span>
+<span class="cm">		* @attribute _isHoverPaused</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @type Boolean</span>
+<span class="cm">		* @default false</span>
+<span class="cm">		*/</span>
+		<span class="nx">_isHoverPaused</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">false</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Outgoing slide Node.</span>
+<span class="cm">		* @attribute _outgoingSlide</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @type Node Instance</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">_outgoingSlide</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">null</span>
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Incoming slide Node.</span>
+<span class="cm">		* @attribute _incomingSlide</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @type Node Instance</span>
+<span class="cm">		* @default null</span>
+<span class="cm">		*/</span>
+		<span class="nx">_incomingSlide</span><span class="o">:</span> <span class="p">{</span>
+			<span class="nx">value</span><span class="o">:</span> <span class="kc">null</span>
+		<span class="p">}</span>
+		
+	<span class="p">};</span>
+	
+	<span class="nx">Y</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">Slideshow</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Widget</span><span class="p">,</span> <span class="p">{</span>
+		
+		<span class="cm">/* ! Public Methods */</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Fires &quot;slideshow:next&quot; event.</span>
+<span class="cm">		* This method is chainable.</span>
+<span class="cm">		* @method next</span>
+<span class="cm">		*/</span>
+		<span class="nx">next</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;next&#39;</span><span class="p">);</span>
+			
+			<span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Fires &quot;slideshow:pause&quot; event.</span>
+<span class="cm">		* This method is chainable.</span>
+<span class="cm">		* @method pause</span>
+<span class="cm">		*/</span>
+		<span class="nx">pause</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;pause&#39;</span><span class="p">);</span>
+			
+			<span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Fires &quot;slideshow:play&quot; event.</span>
+<span class="cm">		* This method is chainable.</span>
+<span class="cm">		* @method play</span>
+<span class="cm">		*/</span>
+		<span class="nx">play</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;play&#39;</span><span class="p">);</span>
+			
+			<span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Fires &quot;slideshow:previous&quot; event.</span>
+<span class="cm">		* This method is chainable.</span>
+<span class="cm">		* @method previous</span>
+<span class="cm">		*/</span>
+		<span class="nx">previous</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;previous&#39;</span><span class="p">);</span>
+			
+			<span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Adjusts the currentIndex and fires the &quot;slideshow:slide&quot; event.</span>
+<span class="cm">		* This method is chainable.</span>
+<span class="cm">		* @method slide</span>
+<span class="cm">		* @param $which {Mixed} The slide to advance to. Can be a slide index, &quot;next&quot;, or &quot;previous&quot;.</span>
+<span class="cm">		*/</span>
+		<span class="nx">slide</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$which</span><span class="p">){</span>
+			
+			<span class="kd">var</span> <span class="nx">$currentIndex</span>		<span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;currentIndex&#39;</span><span class="p">),</span>
+				<span class="nx">$slides</span>				<span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;slides&#39;</span><span class="p">);</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;_outgoingSlide&#39;</span><span class="p">,</span> <span class="nx">$slides</span><span class="p">.</span><span class="nx">item</span><span class="p">(</span><span class="nx">$currentIndex</span><span class="p">));</span>
+			
+			<span class="k">switch</span><span class="p">(</span> <span class="nx">$which</span> <span class="p">){</span>
+				
+				<span class="k">case</span> <span class="s1">&#39;next&#39;</span><span class="o">:</span>
+					
+					<span class="k">if</span><span class="p">(</span> <span class="nx">$currentIndex</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nx">$slides</span><span class="p">.</span><span class="nx">size</span><span class="p">()</span> <span class="p">){</span>
+						
+						<span class="nx">$currentIndex</span><span class="o">++</span><span class="p">;</span>
+						
+					<span class="p">}</span>
+					
+					<span class="k">else</span> <span class="p">{</span>
+						
+						<span class="nx">$currentIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+						
+					<span class="p">}</span>
+					
+					<span class="k">break</span><span class="p">;</span>
+					
+				<span class="k">case</span> <span class="s1">&#39;previous&#39;</span><span class="o">:</span>
+					
+					<span class="k">if</span><span class="p">(</span> <span class="nx">$currentIndex</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="p">){</span>
+						
+						<span class="nx">$currentIndex</span><span class="o">--</span><span class="p">;</span>
+						
+					<span class="p">}</span>
+					
+					<span class="k">else</span> <span class="p">{</span>
+						
+						<span class="nx">$currentIndex</span> <span class="o">=</span> <span class="nx">$slides</span><span class="p">.</span><span class="nx">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+						
+					<span class="p">}</span>
+					
+					<span class="k">break</span><span class="p">;</span>
+					
+				<span class="k">default</span><span class="o">:</span>
+					
+					<span class="k">if</span><span class="p">(</span> <span class="nx">$which</span> <span class="o">==</span> <span class="nx">$currentIndex</span> <span class="p">){</span>
+						
+						<span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+						
+					<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+						
+						<span class="nx">$currentIndex</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span> <span class="nx">$which</span><span class="p">,</span> <span class="mi">10</span> <span class="p">);</span>
+						
+					<span class="p">}</span>
+					
+					<span class="k">break</span><span class="p">;</span>
+				
+			<span class="p">}</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;currentIndex&#39;</span><span class="p">,</span> <span class="nx">$currentIndex</span><span class="p">);</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;_incomingSlide&#39;</span><span class="p">,</span> <span class="nx">$slides</span><span class="p">.</span><span class="nx">item</span><span class="p">(</span><span class="nx">$currentIndex</span><span class="p">));</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;slide&#39;</span><span class="p">);</span>
+			
+			<span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/* ! Protected Methods */</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Checks CSS values for shortcut keywords.</span>
+<span class="cm">		* @method _checkCSSValue</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @param {Node} $node The Node to use if shortcut keywords are found.</span>
+<span class="cm">		* @param {Mixed} $value The CSS value to check.</span>
+<span class="cm">		* @return {Mixed} The parsed CSS value.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_checkCSSValue</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$node</span><span class="p">,</span> <span class="nx">$value</span><span class="p">){</span>
+			
+			<span class="k">switch</span><span class="p">(</span> <span class="nx">$value</span> <span class="p">){</span>
+				
+				<span class="k">case</span> <span class="s1">&#39;cW&#39;</span><span class="o">:</span>
+				<span class="k">case</span> <span class="s1">&#39;containerWidth&#39;</span><span class="o">:</span>
+					
+					<span class="k">return</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;contentBox&#39;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;offsetWidth&#39;</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+					
+				<span class="k">case</span> <span class="s1">&#39;-cW&#39;</span><span class="o">:</span>
+				<span class="k">case</span> <span class="s1">&#39;-containerWidth&#39;</span><span class="o">:</span>
+					
+					<span class="k">return</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;contentBox&#39;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;offsetWidth&#39;</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+					
+				<span class="k">case</span> <span class="s1">&#39;cH&#39;</span><span class="o">:</span>
+				<span class="k">case</span> <span class="s1">&#39;containerHeight&#39;</span><span class="o">:</span>
+					
+					<span class="k">return</span> <span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;contentBox&#39;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;offsetHeight&#39;</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+					
+				<span class="k">case</span> <span class="s1">&#39;-cH&#39;</span><span class="o">:</span>
+				<span class="k">case</span> <span class="s1">&#39;-containerHeight&#39;</span><span class="o">:</span>
+					
+					<span class="k">return</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;contentBox&#39;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;offsetHeight&#39;</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+					
+				<span class="k">case</span> <span class="s1">&#39;sW&#39;</span><span class="o">:</span>
+				<span class="k">case</span> <span class="s1">&#39;slideWidth&#39;</span><span class="o">:</span>
+					
+					<span class="k">return</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">$node</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;offsetWidth&#39;</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+					
+				<span class="k">case</span> <span class="s1">&#39;-sW&#39;</span><span class="o">:</span>
+				<span class="k">case</span> <span class="s1">&#39;-slideWidth&#39;</span><span class="o">:</span>
+					
+					<span class="k">return</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">$node</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;offsetWidth&#39;</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+					
+				<span class="k">case</span> <span class="s1">&#39;sH&#39;</span><span class="o">:</span>
+				<span class="k">case</span> <span class="s1">&#39;slideHeight&#39;</span><span class="o">:</span>
+					
+					<span class="k">return</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">$node</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;offsetHeight&#39;</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+					
+				<span class="k">case</span> <span class="s1">&#39;-sH&#39;</span><span class="o">:</span>
+				<span class="k">case</span> <span class="s1">&#39;-slideHeight&#39;</span><span class="o">:</span>
+					
+					<span class="k">return</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">$node</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;offsetHeight&#39;</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+					
+				<span class="k">default</span><span class="o">:</span>
+					
+					<span class="k">return</span> <span class="nx">$value</span><span class="p">;</span>
+					
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Sanitizes transition values with _checkCSSValue.</span>
+<span class="cm">		* @method _checkTransitionValues</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @param {Node} $node The Node to use if shortcut keywords are found.</span>
+<span class="cm">		* @param {Object} $transition The transition to check.</span>
+<span class="cm">		* @return {Mixed} The sanitized transition.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_checkTransitionValues</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$node</span><span class="p">,</span> <span class="nx">$transition</span><span class="p">){</span>
+			
+			<span class="kd">var</span> <span class="nx">$sanitized</span> <span class="o">=</span> <span class="p">{},</span>
+				<span class="nx">i</span><span class="p">;</span>
+			
+			<span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">$transition</span> <span class="p">){</span>
+				
+				<span class="k">if</span><span class="p">(</span> <span class="nx">i</span> <span class="o">==</span> <span class="s1">&#39;duration&#39;</span> <span class="o">||</span> <span class="nx">i</span> <span class="o">==</span> <span class="s1">&#39;easing&#39;</span> <span class="o">||</span> <span class="nx">i</span> <span class="o">==</span> <span class="s1">&#39;delay&#39;</span> <span class="p">){</span>
+					
+					<span class="nx">$sanitized</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">$transition</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+					
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					
+					<span class="nx">$sanitized</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_checkCSSValue</span><span class="p">(</span><span class="nx">$node</span><span class="p">,</span> <span class="nx">$transition</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+					
+				<span class="p">}</span>
+				
+			<span class="p">}</span>
+			
+			<span class="k">return</span> <span class="nx">$sanitized</span><span class="p">;</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Handles mouseenter on the contentBox.</span>
+<span class="cm">		* @method _handleMouseenter</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_handleMouseenter</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isPaused&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isHoverPaused&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;hoverpause&#39;</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Handles mouseleave on the contentBox.</span>
+<span class="cm">		* @method _handleMouseleave</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_handleMouseleave</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isHoverPaused&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;hoverplay&#39;</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Handles clicks on pagination elements.</span>
+<span class="cm">		* @method _handlePageClick</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_handlePageClick</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pauseOnChange&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">pause</span><span class="p">();</span>
+				
+			<span class="p">}</span>
+			
+			<span class="nx">e</span><span class="p">.</span><span class="nx">target</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">ancestor</span><span class="p">(</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">getClassName</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span> <span class="p">);</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">slide</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">).</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">)</span> <span class="p">);</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Pauses the slideshow momentarily if not already paused.</span>
+<span class="cm">		* @event _hoverpause</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_hoverpause</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isPaused&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isHoverPaused&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">pause</span><span class="p">();</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;_isHoverPaused&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Plays the slideshow if it was hoverpaused.</span>
+<span class="cm">		* @event _hoverplay</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_hoverplay</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isHoverPaused&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Advances the slideshow by one slide.</span>
+<span class="cm">		* @event _next</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_next</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pauseOnChange&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">pause</span><span class="p">();</span>
+				
+			<span class="p">}</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">slide</span><span class="p">(</span><span class="s1">&#39;next&#39;</span><span class="p">);</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Pauses the slideshow.</span>
+<span class="cm">		* @event _pause</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_pause</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isPaused&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="nb">window</span><span class="p">.</span><span class="nx">clearInterval</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_timeoutID&#39;</span><span class="p">)</span> <span class="p">);</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;_isPaused&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Plays the slideshow.</span>
+<span class="cm">		* @event _play</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_play</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isPaused&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;_isPaused&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;_isHoverPaused&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Reverses the slideshow by one slide.</span>
+<span class="cm">		* @event _previous</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_previous</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pauseOnChange&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">pause</span><span class="p">();</span>
+				
+			<span class="p">}</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">slide</span><span class="p">(</span><span class="s1">&#39;previous&#39;</span><span class="p">);</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Sets active class on current page Node.</span>
+<span class="cm">		* @method _setActivePage</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		*/</span>
+		<span class="nx">_setActivePage</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+			
+			<span class="kd">var</span>	<span class="nx">$pages</span>	<span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">);</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isNull</span><span class="p">(</span><span class="nx">$pages</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="nx">$pages</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">getClassName</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">)</span> <span class="p">);</span>
+				
+				<span class="nx">$pages</span><span class="p">.</span><span class="nx">item</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;currentIndex&#39;</span><span class="p">)</span> <span class="p">).</span><span class="nx">addClass</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">getClassName</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">)</span> <span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Sets styles after they are sanitized by _checkCSSValue.</span>
+<span class="cm">		* @method _setStyles</span>
+<span class="cm">		* @protected</span>
+<span class="cm">		* @param {Node} $node The node to style.</span>
+<span class="cm">		* @param {Object} $styles The styles to set.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_setStyles</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$node</span><span class="p">,</span> <span class="nx">$styles</span><span class="p">){</span>
+			
+			<span class="k">for</span><span class="p">(</span> <span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">$styles</span> <span class="p">){</span>
+				
+				<span class="k">if</span><span class="p">(</span> <span class="nx">$styles</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">){</span>
+					
+					<span class="nx">$node</span><span class="p">.</span><span class="nx">setStyle</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_checkCSSValue</span><span class="p">(</span><span class="nx">$node</span><span class="p">,</span> <span class="nx">$styles</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+					
+				<span class="p">}</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Performs the slide transition.</span>
+<span class="cm">		* @event _slide</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_slide</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="kd">var</span> <span class="nx">$that</span>				<span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+				<span class="nx">$slideTransition</span>	<span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;transition&#39;</span><span class="p">),</span>
+				<span class="nx">$outgoingSlide</span>		<span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_outgoingSlide&#39;</span><span class="p">),</span>
+				<span class="nx">$incomingSlide</span>		<span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_incomingSlide&#39;</span><span class="p">);</span>
+			
+			<span class="c1">// Duraton and easing:</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">duration</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">duration</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">easing</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">easing</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;easing&#39;</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">duration</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">duration</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">easing</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">easing</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;easing&#39;</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+			<span class="c1">// Default &quot;before&quot; styles:</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">_setStyles</span><span class="p">(</span> <span class="nx">$outgoingSlide</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;transOutBefore&#39;</span><span class="p">)</span> <span class="p">);</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">_setStyles</span><span class="p">(</span> <span class="nx">$incomingSlide</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;transInBefore&#39;</span><span class="p">)</span> <span class="p">);</span>
+			
+			<span class="c1">// Transition &quot;before&quot; styles:</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">before</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">_setStyles</span><span class="p">(</span> <span class="nx">$outgoingSlide</span><span class="p">,</span> <span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">before</span> <span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">before</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">_setStyles</span><span class="p">(</span> <span class="nx">$incomingSlide</span><span class="p">,</span> <span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">before</span> <span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+			<span class="c1">// Transitions:</span>
+			
+			<span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">transition</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_checkTransitionValues</span><span class="p">(</span><span class="nx">$outgoingSlide</span><span class="p">,</span> <span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">transition</span><span class="p">);</span>
+			
+			<span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">transition</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_checkTransitionValues</span><span class="p">(</span><span class="nx">$incomingSlide</span><span class="p">,</span> <span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">transition</span><span class="p">);</span>
+			
+			<span class="nx">$outgoingSlide</span><span class="p">.</span><span class="nx">transition</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">transition</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+				
+				<span class="c1">// Default &quot;after&quot; styles:</span>
+				
+				<span class="nx">$that</span><span class="p">.</span><span class="nx">_setStyles</span><span class="p">(</span> <span class="nx">$outgoingSlide</span><span class="p">,</span> <span class="nx">$that</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;transOutAfter&#39;</span><span class="p">)</span> <span class="p">);</span>
+				
+				<span class="c1">// Transition &quot;after&quot; styles:</span>
+				
+				<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">after</span><span class="p">)</span> <span class="p">){</span>
+					
+					<span class="nx">$that</span><span class="p">.</span><span class="nx">_setStyles</span><span class="p">(</span> <span class="nx">$outgoingSlide</span><span class="p">,</span> <span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideOut</span><span class="p">.</span><span class="nx">after</span> <span class="p">);</span>
+					
+				<span class="p">}</span>
+				
+			<span class="p">});</span>
+			
+			<span class="nx">$incomingSlide</span><span class="p">.</span><span class="nx">transition</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">transition</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+				
+				<span class="c1">// Default &quot;after&quot; styles:</span>
+				
+				<span class="nx">$that</span><span class="p">.</span><span class="nx">_setStyles</span><span class="p">(</span> <span class="nx">$incomingSlide</span><span class="p">,</span> <span class="nx">$that</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;transInAfter&#39;</span><span class="p">)</span> <span class="p">);</span>
+				
+				<span class="c1">// Transition &quot;after&quot; styles:</span>
+				
+				<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">after</span><span class="p">)</span> <span class="p">){</span>
+					
+					<span class="nx">$that</span><span class="p">.</span><span class="nx">_setStyles</span><span class="p">(</span> <span class="nx">$incomingSlide</span><span class="p">,</span> <span class="nx">$slideTransition</span><span class="p">.</span><span class="nx">slideIn</span><span class="p">.</span><span class="nx">after</span> <span class="p">);</span>
+					
+				<span class="p">}</span>
+				
+			<span class="p">});</span>
+			
+			<span class="c1">// Update active page:</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">_setActivePage</span><span class="p">();</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Calls setTimeout for autoplay.</span>
+<span class="cm">		* @event _timeout</span>
+<span class="cm">		* @param {Event} e The Event object.</span>
+<span class="cm">		*/</span>
+		<span class="nx">_timeout</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+			<span class="kd">var</span> <span class="nx">$that</span>		<span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+				<span class="nx">$interval</span>	<span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;interval&#39;</span><span class="p">);</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">$interval</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="nx">$interval</span> <span class="o">=</span> <span class="nx">$interval</span><span class="p">[</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;currentIndex&#39;</span><span class="p">)</span> <span class="p">];</span>
+				
+			<span class="p">}</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isPaused&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_isHoverPaused&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="s1">&#39;_timeoutID&#39;</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+					
+					<span class="nx">$that</span><span class="p">.</span><span class="nx">slide</span><span class="p">(</span><span class="s1">&#39;next&#39;</span><span class="p">);</span>
+					
+					<span class="nx">$that</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">);</span>
+					
+				<span class="p">},</span> <span class="nb">parseInt</span><span class="p">(</span> <span class="nx">$interval</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span> <span class="p">))</span> <span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/* ! Lifecycle Methods */</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Binds event handlers and publishes custom events.</span>
+<span class="cm">		* @method bindUI</span>
+<span class="cm">		*/</span>
+		<span class="nx">bindUI</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+			
+			<span class="kd">var</span> <span class="nx">$buttons</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;previous&#39;</span><span class="p">,</span> <span class="s1">&#39;next&#39;</span><span class="p">,</span> <span class="s1">&#39;pause&#39;</span><span class="p">,</span> <span class="s1">&#39;play&#39;</span><span class="p">],</span>
+				<span class="nx">$pages</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">),</span>
+				<span class="nx">$target</span><span class="p">,</span>
+				<span class="nx">i</span><span class="p">;</span>
+				
+			<span class="c1">// Buttons and Published Events:</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">defaultFn</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_timeout</span> <span class="p">});</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s1">&#39;slide&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">defaultFn</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_slide</span> <span class="p">});</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s1">&#39;hoverpause&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">defaultFn</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_hoverpause</span> <span class="p">});</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s1">&#39;hoverplay&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">defaultFn</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_hoverplay</span> <span class="p">});</span>
+			
+			<span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">$buttons</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="nx">$buttons</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="p">{</span> <span class="nx">defaultFn</span><span class="o">:</span> <span class="k">this</span><span class="p">[</span><span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nx">$buttons</span><span class="p">[</span><span class="nx">i</span><span class="p">]]</span> <span class="p">});</span>
+				
+				<span class="nx">$target</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">$buttons</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;Button&#39;</span> <span class="p">);</span>
+				
+				<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isNull</span><span class="p">(</span><span class="nx">$target</span><span class="p">)</span> <span class="p">){</span>
+					
+					<span class="nx">Y</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">[</span><span class="nx">$buttons</span><span class="p">[</span><span class="nx">i</span><span class="p">]],</span> <span class="nx">$target</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+					
+				<span class="p">}</span>
+				
+			<span class="p">}</span>
+			
+			<span class="c1">// Pages:</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isNull</span><span class="p">(</span><span class="nx">$pages</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="nx">$pages</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_handlePageClick</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+			<span class="c1">// Hover:</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pauseOnHover&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;contentBox&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;mouseenter&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_handleMouseenter</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;contentBox&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;mouseleave&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_handleMouseleave</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Sets initial widget state.</span>
+<span class="cm">		* @method syncUI</span>
+<span class="cm">		*/</span>
+		<span class="nx">syncUI</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+			
+			<span class="kd">var</span> <span class="nx">$that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+				<span class="nx">$pages</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">),</span>
+				<span class="nx">$count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			
+			<span class="c1">// Slides:</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;slides&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span> <span class="nx">$node</span> <span class="p">){</span>
+				
+				<span class="nx">$count</span><span class="o">++</span><span class="p">;</span>
+				
+				<span class="k">if</span><span class="p">(</span> <span class="nx">$count</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="p">){</span>
+					
+					<span class="nx">$node</span><span class="p">.</span><span class="nx">setStyles</span><span class="p">(</span> <span class="nx">$that</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;transOutAfter&#39;</span><span class="p">)</span> <span class="p">);</span>
+					
+				<span class="p">}</span>
+				
+			<span class="p">});</span>
+			
+			<span class="c1">// Pages:</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isNull</span><span class="p">(</span><span class="nx">$pages</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="nx">$pages</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">getClassName</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span> <span class="p">);</span>
+				
+			<span class="p">}</span>
+			
+			<span class="c1">// Autoplay:</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;autoplay&#39;</span><span class="p">)</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">},</span>
+		
+		<span class="cm">/**</span>
+<span class="cm">		* Initializes the Slideshow.</span>
+<span class="cm">		* @method initializer</span>
+<span class="cm">		*/</span>
+		<span class="nx">initializer</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+			
+			<span class="c1">// Slides:</span>
+			
+			<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;slides&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;contentBox&#39;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;children&#39;</span><span class="p">));</span>
+			
+			<span class="c1">// Pages:</span>
+			
+			<span class="k">if</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">))</span> <span class="p">){</span>
+				
+				<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">)));</span>
+				
+			<span class="p">}</span>
+			
+		<span class="p">}</span>
+		
+	<span class="p">});</span>
+	
+	<span class="nx">Y</span><span class="p">.</span><span class="nx">Slideshow</span> <span class="o">=</span> <span class="nx">Slideshow</span><span class="p">;</span>
+	
+</pre></div>
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_gallery-yui-slideshow.html" title="gallery-yui-slideshow">gallery-yui-slideshow</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="Slideshow.html" title="Slideshow">Slideshow</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class="selected"><a href="gallery-yui-slideshow.js.html" title="gallery-yui-slideshow.js">gallery-yui-slideshow.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Copyright &copy; 2011 Yahoo! Inc. All rights reserved.
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "Slideshow.html#config_autoplay", "access": "", "host": "Slideshow", "type": "config", "name": "autoplay"}, {"url": "Slideshow.html#event_autoplayChange", "access": "", "host": "Slideshow", "type": "event", "name": "autoplayChange"}, {"url": "Slideshow.html#method_bindUI", "access": "", "host": "Slideshow", "type": "method", "name": "bindUI"}, {"url": "Slideshow.html#method__checkCSSValue", "access": "protected", "host": "Slideshow", "type": "method", "name": "_checkCSSValue"}, {"url": "Slideshow.html#method__checkTransitionValues", "access": "protected", "host": "Slideshow", "type": "method", "name": "_checkTransitionValues"}, {"url": "Slideshow.html#config_currentIndex", "access": "", "host": "Slideshow", "type": "config", "name": "currentIndex"}, {"url": "Slideshow.html#event_currentIndexChange", "access": "", "host": "Slideshow", "type": "event", "name": "currentIndexChange"}, {"url": "Slideshow.html#config_duration", "access": "", "host": "Slideshow", "type": "config", "name": "duration"}, {"url": "Slideshow.html#event_durationChange", "access": "", "host": "Slideshow", "type": "event", "name": "durationChange"}, {"url": "Slideshow.html#config_easing", "access": "", "host": "Slideshow", "type": "config", "name": "easing"}, {"url": "Slideshow.html#event_easingChange", "access": "", "host": "Slideshow", "type": "event", "name": "easingChange"}, {"url": "Slideshow.html#method__handleMouseenter", "access": "protected", "host": "Slideshow", "type": "method", "name": "_handleMouseenter"}, {"url": "Slideshow.html#method__handleMouseleave", "access": "protected", "host": "Slideshow", "type": "method", "name": "_handleMouseleave"}, {"url": "Slideshow.html#method__handlePageClick", "access": "protected", "host": "Slideshow", "type": "method", "name": "_handlePageClick"}, {"url": "Slideshow.html#event__hoverpause", "access": "", "host": "Slideshow", "type": "event", "name": "_hoverpause"}, {"url": "Slideshow.html#event__hoverplay", "access": "", "host": "Slideshow", "type": "event", "name": "_hoverplay"}, {"url": "Slideshow.html#config__incomingSlide", "access": "protected", "host": "Slideshow", "type": "config", "name": "_incomingSlide"}, {"url": "Slideshow.html#event__incomingSlideChange", "access": "", "host": "Slideshow", "type": "event", "name": "_incomingSlideChange"}, {"url": "Slideshow.html#method_initializer", "access": "", "host": "Slideshow", "type": "method", "name": "initializer"}, {"url": "Slideshow.html#config_interval", "access": "", "host": "Slideshow", "type": "config", "name": "interval"}, {"url": "Slideshow.html#event_intervalChange", "access": "", "host": "Slideshow", "type": "event", "name": "intervalChange"}, {"url": "Slideshow.html#config__isHoverPaused", "access": "protected", "host": "Slideshow", "type": "config", "name": "_isHoverPaused"}, {"url": "Slideshow.html#event__isHoverPausedChange", "access": "", "host": "Slideshow", "type": "event", "name": "_isHoverPausedChange"}, {"url": "Slideshow.html#config__isPaused", "access": "protected", "host": "Slideshow", "type": "config", "name": "_isPaused"}, {"url": "Slideshow.html#event__isPausedChange", "access": "", "host": "Slideshow", "type": "event", "name": "_isPausedChange"}, {"url": "Slideshow.html#property_NAME", "access": "", "host": "Slideshow", "type": "property", "name": "NAME"}, {"url": "Slideshow.html#method_next", "access": "", "host": "Slideshow", "type": "method", "name": "next"}, {"url": "Slideshow.html#event__next", "access": "", "host": "Slideshow", "type": "event", "name": "_next"}, {"url": "Slideshow.html#config_nextButton", "access": "", "host": "Slideshow", "type": "config", "name": "nextButton"}, {"url": "Slideshow.html#event_nextButtonChange", "access": "", "host": "Slideshow", "type": "event", "name": "nextButtonChange"}, {"url": "Slideshow.html#config__outgoingSlide", "access": "protected", "host": "Slideshow", "type": "config", "name": "_outgoingSlide"}, {"url": "Slideshow.html#event__outgoingSlideChange", "access": "", "host": "Slideshow", "type": "event", "name": "_outgoingSlideChange"}, {"url": "Slideshow.html#config_pages", "access": "", "host": "Slideshow", "type": "config", "name": "pages"}, {"url": "Slideshow.html#event_pagesChange", "access": "", "host": "Slideshow", "type": "event", "name": "pagesChange"}, {"url": "Slideshow.html#method_pause", "access": "", "host": "Slideshow", "type": "method", "name": "pause"}, {"url": "Slideshow.html#event__pause", "access": "", "host": "Slideshow", "type": "event", "name": "_pause"}, {"url": "Slideshow.html#config_pauseButton", "access": "", "host": "Slideshow", "type": "config", "name": "pauseButton"}, {"url": "Slideshow.html#event_pauseButtonChange", "access": "", "host": "Slideshow", "type": "event", "name": "pauseButtonChange"}, {"url": "Slideshow.html#config_pauseOnChange", "access": "", "host": "Slideshow", "type": "config", "name": "pauseOnChange"}, {"url": "Slideshow.html#event_pauseOnChangeChange", "access": "", "host": "Slideshow", "type": "event", "name": "pauseOnChangeChange"}, {"url": "Slideshow.html#config_pauseOnHover", "access": "", "host": "Slideshow", "type": "config", "name": "pauseOnHover"}, {"url": "Slideshow.html#event_pauseOnHoverChange", "access": "", "host": "Slideshow", "type": "event", "name": "pauseOnHoverChange"}, {"url": "Slideshow.html#method_play", "access": "", "host": "Slideshow", "type": "method", "name": "play"}, {"url": "Slideshow.html#event__play", "access": "", "host": "Slideshow", "type": "event", "name": "_play"}, {"url": "Slideshow.html#config_playButton", "access": "", "host": "Slideshow", "type": "config", "name": "playButton"}, {"url": "Slideshow.html#event_playButtonChange", "access": "", "host": "Slideshow", "type": "event", "name": "playButtonChange"}, {"url": "Slideshow.html#property_PRESETS.fade", "access": "", "host": "Slideshow", "type": "property", "name": "PRESETS.fade"}, {"url": "Slideshow.html#property_PRESETS.slideDown", "access": "", "host": "Slideshow", "type": "property", "name": "PRESETS.slideDown"}, {"url": "Slideshow.html#property_PRESETS.slideLeft", "access": "", "host": "Slideshow", "type": "property", "name": "PRESETS.slideLeft"}, {"url": "Slideshow.html#property_PRESETS.slideRight", "access": "", "host": "Slideshow", "type": "property", "name": "PRESETS.slideRight"}, {"url": "Slideshow.html#property_PRESETS.slideUp", "access": "", "host": "Slideshow", "type": "property", "name": "PRESETS.slideUp"}, {"url": "Slideshow.html#method_previous", "access": "", "host": "Slideshow", "type": "method", "name": "previous"}, {"url": "Slideshow.html#event__previous", "access": "", "host": "Slideshow", "type": "event", "name": "_previous"}, {"url": "Slideshow.html#config_previousButton", "access": "", "host": "Slideshow", "type": "config", "name": "previousButton"}, {"url": "Slideshow.html#event_previousButtonChange", "access": "", "host": "Slideshow", "type": "event", "name": "previousButtonChange"}, {"url": "Slideshow.html#method__setActivePage", "access": "protected", "host": "Slideshow", "type": "method", "name": "_setActivePage"}, {"url": "Slideshow.html#method__setStyles", "access": "protected", "host": "Slideshow", "type": "method", "name": "_setStyles"}, {"url": "Slideshow.html#method_slide", "access": "", "host": "Slideshow", "type": "method", "name": "slide"}, {"url": "Slideshow.html#event__slide", "access": "", "host": "Slideshow", "type": "event", "name": "_slide"}, {"url": "Slideshow.html#config_slides", "access": "", "host": "Slideshow", "type": "config", "name": "slides"}, {"url": "Slideshow.html#event_slidesChange", "access": "", "host": "Slideshow", "type": "event", "name": "slidesChange"}, {"url": "Slideshow.html#method_syncUI", "access": "", "host": "Slideshow", "type": "method", "name": "syncUI"}, {"url": "Slideshow.html#event__timeout", "access": "", "host": "Slideshow", "type": "event", "name": "_timeout"}, {"url": "Slideshow.html#config__timeoutID", "access": "protected", "host": "Slideshow", "type": "config", "name": "_timeoutID"}, {"url": "Slideshow.html#event__timeoutIDChange", "access": "", "host": "Slideshow", "type": "event", "name": "_timeoutIDChange"}, {"url": "Slideshow.html#config_transInAfter", "access": "", "host": "Slideshow", "type": "config", "name": "transInAfter"}, {"url": "Slideshow.html#event_transInAfterChange", "access": "", "host": "Slideshow", "type": "event", "name": "transInAfterChange"}, {"url": "Slideshow.html#config_transInBefore", "access": "", "host": "Slideshow", "type": "config", "name": "transInBefore"}, {"url": "Slideshow.html#event_transInBeforeChange", "access": "", "host": "Slideshow", "type": "event", "name": "transInBeforeChange"}, {"url": "Slideshow.html#config_transition", "access": "", "host": "Slideshow", "type": "config", "name": "transition"}, {"url": "Slideshow.html#event_transitionChange", "access": "", "host": "Slideshow", "type": "event", "name": "transitionChange"}, {"url": "Slideshow.html#config_transOutAfter", "access": "", "host": "Slideshow", "type": "config", "name": "transOutAfter"}, {"url": "Slideshow.html#event_transOutAfterChange", "access": "", "host": "Slideshow", "type": "event", "name": "transOutAfterChange"}, {"url": "Slideshow.html#config_transOutBefore", "access": "", "host": "Slideshow", "type": "config", "name": "transOutBefore"}, {"url": "Slideshow.html#event_transOutBeforeChange", "access": "", "host": "Slideshow", "type": "event", "name": "transOutBeforeChange"}];
+</script>
+</body>
+</html>
