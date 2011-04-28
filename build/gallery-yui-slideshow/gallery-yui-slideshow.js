@@ -1079,4 +1079,8 @@ YUI.add('gallery-yui-slideshow', function(Y) {
 	
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{requires:['widget','transition','event-mouseenter']});
+=======
+}, 'gallery-2011.04.20-13-04' ,{requires:['widget','transition','event-mouseenter']});
+>>>>>>> upstream/master
