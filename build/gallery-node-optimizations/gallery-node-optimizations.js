@@ -5,12 +5,14 @@ YUI.add('gallery-node-optimizations', function(Y) {
 /**
  * Optimizations for searching DOM tree.
  *
- * @module gallery-node-optimizations
- * @class Y.Node
+ * @module node
+ * @submodule gallery-node-optimizations
+ * @class Node~optimizations
  */
 
-var class_name_regex = /\.([-_a-z0-9]+)/i;
-var tag_name_regex   = /[a-z]+/i;
+var tag_class_name_re = /^([a-z]*)\.([-_a-z0-9]+)$/i;
+var class_name_re     = /^\.([-_a-z0-9]+)$/i;
+var tag_name_re       = /^[a-z]+$/i;
 
 /**********************************************************************
  * <p>Patch to speed up search for a single class name or single tag name.
@@ -30,19 +32,19 @@ Y.Node.prototype.ancestor = function(
 {
 	if (Y.Lang.isString(fn))
 	{
-		var m = class_name_regex.exec(fn);
+		var m = class_name_re.exec(fn);
 		if (m && m.length)
 		{
 			return this.getAncestorByClassName(m[1], test_self);
 		}
 
-		if (tag_name_regex.test(fn))
+		if (tag_name_re.test(fn))
 		{
 			return this.getAncestorByTagName(fn, test_self);
 		}
 	}
 
-	return orig_ancestor(fn, test_self);
+	return orig_ancestor.apply(this, arguments);
 };
 
 /**********************************************************************
@@ -126,19 +128,19 @@ Y.Node.prototype.all = function(
 {
 	if (Y.Lang.isString(selector))
 	{
-		var m = class_name_regex.exec(selector);
+		var m = tag_class_name_re.exec(selector);
 		if (m && m.length)
 		{
-			return this.getElementsByClassName(m[1]);
+			return this.getElementsByClassName(m[2], m[1]);
 		}
 
-		if (tag_name_regex.test(selector))
+		if (tag_name_re.test(selector))
 		{
 			return this.getElementsByTagName(selector);
 		}
 	}
 
-	return orig_all(selector);
+	return orig_all.apply(this, arguments);
 };
 
 /**********************************************************************
@@ -184,4 +186,4 @@ Y.Node.prototype.getElementsByClassName = function(
 };
 
 
-}, 'gallery-2011.04.13-22-38' ,{requires:['node-base']});
+}, 'gallery-2011.08.24-23-44' ,{requires:['node-base']});

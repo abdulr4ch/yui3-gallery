@@ -8,6 +8,10 @@ YUI.add('gallery-formmgr', function(Y) {
  * 
  * <p>Also see the documentation for gallery-formmgr-css-validation.</p>
  * 
+ * @module gallery-formmgr
+ */
+
+/**
  * <p><strong>Required Markup Structure</strong></p>
  * 
  * <p>Each element (or tighly coupled set of elements) must be contained by
@@ -93,6 +97,10 @@ YUI.add('gallery-formmgr', function(Y) {
  * <p>More complex pre-validations can be added by overriding
  * <code>postValidateForm()</code>, described below.</p>
  *
+ * <p>Validation normally strips leading and trailing whitespace from every
+ * value.  If you have a special case where this should not be done, add
+ * the CSS class <code>yiv-no-trim</code> to the input field.</p>
+ *
  * <p>Derived classes may also override the following functions:</p>
  *
  * <dl>
@@ -109,7 +117,6 @@ YUI.add('gallery-formmgr', function(Y) {
  *		is a problem.</dd>
  * </dl>
  *
- * @module gallery-formmgr
  * @class FormManager
  * @constructor
  * @param form_name {String} The name attribute of the HTML form.
@@ -125,15 +132,8 @@ function FormManager(
 	/* string */	form_name,
 	/* object */	config)		// {status_node, default_value_map}
 {
-	if (arguments.length === 0)	// derived class prototype
-	{
-		return;
-	}
-
-	if (!config)
-	{
-		config = {};
-	}
+	config = config || {};
+	FormManager.superclass.constructor.call(this, config);
 
 	this.form_name   = form_name;
 	this.status_node = Y.one(config.status_node);
@@ -273,66 +273,9 @@ function rowStatusRegex()
 }
 
 /**
- * <p>Names of supported status values, highest precedence first.  Default:
- * <code>[ 'error', 'warn', 'success', 'info' ]</code></p>
- * 
- * <p>This is static because it links to CSS rules that define the
- * appearance of each status type:  .formmgr-has{status}</p>
- * 
- * @config Y.FormManager.status_order
- * @type {Array}
- * @static
- */
-FormManager.status_order =
-[
-	'error',
-	'warn',
-	'success',
-	'info'
-];
-
-/**
- * Get the precedence of the given status name.
- * 
- * @method Y.FormManager.getStatusPrecedence
- * @static
- * @param status {String} The name of the status value.
- * @return {int} The position in the <code>status_order</code> array.
- */
-FormManager.getStatusPrecedence = function(
-	/* string */	status)
-{
-	for (var i=0; i<FormManager.status_order.length; i++)
-	{
-		if (status == FormManager.status_order[i])
-		{
-			return i;
-		}
-	}
-
-	return FormManager.status_order.length;
-};
-
-/**
- * Compare two status values.
- * 
- * @method Y.FormManager.statusTakesPrecendence
- * @static
- * @param orig_status {String} The name of the original status value.
- * @param new_status {String} The name of the new status value.
- * @return {boolean} <code>true</code> if <code>new_status</code> takes precedence over <code>orig_status</code>
- */
-FormManager.statusTakesPrecendence = function(
-	/* string */	orig_status,
-	/* string */	new_status)
-{
-	return (!orig_status || FormManager.getStatusPrecedence(new_status) < FormManager.getStatusPrecedence(orig_status));
-};
-
-/**
  * Get the status of the given fieldset or form row.
  * 
- * @method Y.FormManager.getElementStatus
+ * @method getElementStatus
  * @static
  * @param e {String|Object} The descriptor or DOM element.
  * @return {mixed} The status (String) or <code>false</code>.
@@ -360,39 +303,6 @@ function getId(
 		return e.id;
 	}
 }
-
-/**
- * Trim leading and trailing whitespace from the specified fields.
- * 
- * @method Y.FormManager.cleanValues
- * @static
- * @param e {Array|NodeList} The fields to clean.
- * @return {boolean} <code>true</code> if there are any file inputs.
- */
-FormManager.cleanValues = function(
-	/* array */	e)
-{
-	var has_file_inputs = false;
-	for (var i=0; i<e.length; i++)
-	{
-		var input = e[i];
-		var type  = input.type && input.type.toLowerCase();
-		if (type == 'file')
-		{
-			has_file_inputs = true;
-		}
-		else if (type == 'select-multiple')
-		{
-			// don't change the value
-		}
-		else if (input.value)
-		{
-			input.value = Y.Lang.trim(input.value);
-		}
-	}
-
-	return has_file_inputs;
-};
 
 function populateForm1()
 {
@@ -486,7 +396,106 @@ function populateForm1()
 	}
 }
 
-FormManager.prototype =
+/**
+ * <p>Exposed for use by Y.QueryBuilder</p>
+ * 
+ * <p>Clear the message for the given field.</p>
+ * 
+ * @method Y.FormManager.clearMessage
+ * @static
+ * @param e {Element|Node} the field
+ */
+FormManager.clearMessage = function(e)
+{
+	var p = Y.one(e).getAncestorByClassName(Y.FormManager.row_marker_class);
+	if (p && p.hasClass(rowStatusPattern()))
+	{
+		p.all('.'+Y.FormManager.status_marker_class).set('innerHTML', '');
+		p.removeClass(rowStatusPattern());
+
+		p.all('.'+Y.FormManager.field_marker_class).removeClass(rowStatusPattern());
+	}
+};
+
+/**
+ * <p>Exposed for use by Y.QueryBuilder</p>
+ * 
+ * <p>Display a message for the form row containing the specified element.
+ * The message will only be displayed if no message with a higher
+ * precedence is already visible. (see Y.FormManager.status_order)</p>
+ * 
+ * @method Y.FormManager.displayMessage
+ * @static
+ * @param e {String|Object} The selector for the element or the element itself
+ * @param msg {String} The message
+ * @param type {String} The message type (see Y.FormManager.status_order)
+ * @param had_messages {boolean} (Optional) <code>true</code> if the form already has messages displayed
+ * @param scroll {boolean} (Optional) <code>true</code> if the form row should be scrolled into view
+ * @return {boolean} true if the message was displayed, false if a higher precedence message was already there
+ */
+FormManager.displayMessage = function(
+	/* id/object */	e,
+	/* string */	msg,
+	/* string */	type,
+	/* boolean */	had_messages,
+	/* boolean */	scroll)
+{
+	if (Y.Lang.isUndefined(scroll))
+	{
+		scroll = true;
+	}
+
+	e     = Y.one(e);
+	var p = e.getAncestorByClassName(FormManager.row_marker_class);
+	if (p && FormManager.statusTakesPrecedence(FormManager.getElementStatus(p), type))
+	{
+		var f = p.all('.'+FormManager.field_marker_class);
+		if (f)
+		{
+			f.removeClass(rowStatusPattern());
+		}
+
+		if (msg)
+		{
+			p.one('.'+FormManager.status_marker_class).set('innerHTML', msg);
+		}
+
+		var new_class = FormManager.row_status_prefix + type;
+		p.replaceClass(rowStatusPattern(), new_class);
+
+		f = e.getAncestorByClassName(FormManager.field_marker_class, true);
+		if (f)
+		{
+			f.replaceClass(rowStatusPattern(), new_class);
+		}
+
+		var fieldset = e.getAncestorByTagName('fieldset');
+		if (fieldset && FormManager.statusTakesPrecedence(FormManager.getElementStatus(fieldset), type))
+		{
+			fieldset.removeClass(rowStatusPattern());
+			fieldset.addClass(FormManager.row_status_prefix + type);
+		}
+
+		if (!had_messages && scroll)
+		{
+			p.scrollIntoView();
+			try
+			{
+				e.focus();
+			}
+			catch (ex)
+			{
+				// no way to determine in IE if this will fail
+			}
+		}
+
+		return true;
+	}
+
+	return false;
+};
+
+Y.extend(FormManager, Y.Plugin.Host,
 {
 	/* *********************************************************************
 	 * Access functions.
@@ -510,6 +519,15 @@ FormManager.prototype =
 	hasFileInputs: function()
 	{
 		return this.has_file_inputs;
+	},
+
+	/**
+	 * @param node {String|Y.Node} the node in which status should be displayed
+	 */
+	setStatusNode: function(
+		/* Node */	node)
+	{
+		this.status_node = Y.one(node);
 	},
 
 	/**
@@ -598,7 +616,7 @@ FormManager.prototype =
 
 		if (!this.validation_msgs[id] || !this.validation_msgs[id].regex)
 		{
-			Y.log(Y.substitute('No error message provided for regex validation of {id}!', {id:id}), 'error', 'FormManager');
+			Y.error(Y.substitute('No error message provided for regex validation of {id}!', {id:id}), null, 'FormManager');
 		}
 	},
 
@@ -917,7 +935,9 @@ FormManager.prototype =
 	 */
 
 	/**
-	 * Register a button that can be disabled.  Buttons contained within
+	 * Register an object that can be disabled.  The object must support
+	 * the set('disabled', ...) API.  (The exception is DOM nodes, since
+	 * they are automatically wrapped in Y.Node.)  Buttons contained within
 	 * the form DOM element are automatically registered.
 	 * 
 	 * @param el {String|Object} The selector for the element or the element itself
@@ -927,7 +947,7 @@ FormManager.prototype =
 	{
 		var info =
 		{
-			e: Y.one(el)
+			e: Y.Lang.isString(el) || el.tagName ? Y.one(el) : el
 		};
 
 		this.user_button_list.push(info);
@@ -1027,26 +1047,15 @@ FormManager.prototype =
 			this.status_node.replaceClass(statusPattern(), FormManager.status_none_class);
 		}
 
-		for (var i=0; i<this.form.elements.length; i++)
+		Y.Array.each(this.form.elements, function(e)
 		{
-			var e = this.form.elements[i];
-
 			var name = e.tagName.toLowerCase();
 			var type = (e.type ? e.type.toLowerCase() : null);
-			if (name == 'button' || type == 'submit' || type == 'reset')
+			if (name != 'button' && type != 'submit' && type != 'reset')
 			{
-				continue;
+				FormManager.clearMessage(e);
 			}
-
-			var p = Y.one(e).getAncestorByClassName(FormManager.row_marker_class);
-			if (p && p.hasClass(rowStatusPattern()))
-			{
-				p.all('.'+FormManager.status_marker_class).set('innerHTML', '');
-				p.removeClass(rowStatusPattern());
-
-				p.all('.'+FormManager.field_marker_class).removeClass(rowStatusPattern());
-			}
-		}
+		});
 
 		Y.one(this.form).all('fieldset').removeClass(rowStatusPattern());
 	},
@@ -1068,55 +1077,8 @@ FormManager.prototype =
 		/* string */	type,
 		/* boolean */	scroll)
 	{
-		if (Y.Lang.isUndefined(scroll))
+		if (FormManager.displayMessage(e, msg, type, this.has_messages, scroll))
 		{
-			scroll = true;
-		}
-
-		e     = Y.one(e);
-		var p = e.getAncestorByClassName(FormManager.row_marker_class);
-		if (p && FormManager.statusTakesPrecendence(FormManager.getElementStatus(p), type))
-		{
-			var f = p.all('.'+FormManager.field_marker_class);
-			if (f)
-			{
-				f.removeClass(rowStatusPattern());
-			}
-
-			if (msg)
-			{
-				p.one('.'+FormManager.status_marker_class).set('innerHTML', msg);
-			}
-
-			var new_class = FormManager.row_status_prefix + type;
-			p.replaceClass(rowStatusPattern(), new_class);
-
-			f = e.getAncestorByClassName(FormManager.field_marker_class, true);
-			if (f)
-			{
-				f.replaceClass(rowStatusPattern(), new_class);
-			}
-
-			var fieldset = e.getAncestorByTagName('fieldset');
-			if (fieldset && FormManager.statusTakesPrecendence(FormManager.getElementStatus(fieldset), type))
-			{
-				fieldset.removeClass(rowStatusPattern());
-				fieldset.addClass(FormManager.row_status_prefix + type);
-			}
-
-			if (!this.has_messages && scroll)
-			{
-				p.scrollIntoView();
-				try
-				{
-					e.focus();
-				}
-				catch (ex)
-				{
-					// no way to determine in IE if this will fail
-				}
-			}
-
 			this.has_messages = true;
 			if (type == 'error')
 			{
@@ -1125,8 +1087,10 @@ FormManager.prototype =
 
 			return true;
 		}
-
-		return false;
+		else
+		{
+			return false;
+		}
 	},
 
 	/**
@@ -1177,20 +1141,12 @@ FormManager.prototype =
 			Y.log(msg, 'warn', 'FormManager');
 		}
 	}
-};
+});
 
-if (Y.FormManager)	// static data & functions from gallery-formmgr-css-validation
-{
-	for (var key in Y.FormManager)
-	{
-		if (Y.FormManager.hasOwnProperty(key))
-		{
-			FormManager[key] = Y.FormManager[key];
-		}
-	}
-}
+// static data & functions from gallery-formmgr-css-validation
+Y.aggregate(FormManager, Y.FormManager);
 
 Y.FormManager = FormManager;
 
 
-}, 'gallery-2011.04.13-22-38' ,{requires:['gallery-node-optimizations','gallery-formmgr-css-validation']});
+}, 'gallery-2011.08.24-23-44' ,{requires:['pluginhost-base','gallery-node-optimizations','gallery-formmgr-css-validation'], optional:['gallery-scrollintoview']});

@@ -246,6 +246,7 @@ Y.Form = Y.Base.create('form', Y.Widget, [Y.WidgetParent], {
             var formAction = this.get('action'),
             formMethod = this.get('method'),
             submitViaIO = this.get('submitViaIO'),
+            io = this.get("io"),
             transaction,
             cfg;
 
@@ -258,7 +259,6 @@ Y.Form = Y.Base.create('form', Y.Widget, [Y.WidgetParent], {
                     }
                 };
 
-                var io = this.get("io");
                 transaction = io(formAction, cfg);
                 this._ioIds[transaction.id] = transaction;
             } else {
@@ -286,6 +286,20 @@ Y.Form = Y.Base.create('form', Y.Widget, [Y.WidgetParent], {
         }
         return sel;
     },
+
+    /**
+     * @method toJSON
+     * @description Returns a JSON object representing the values of
+     *              the form fields
+     */
+    toJSON : function () {
+        var data = {}; 
+        this.each(function (f) {
+            data[f.get('name')] = (f instanceof Y.CheckboxField) ? f.get('checked') : f.get('value');
+        }); 
+
+        return data;
+    },   
 
     initializer: function(config) {
         this._ioIds = {};

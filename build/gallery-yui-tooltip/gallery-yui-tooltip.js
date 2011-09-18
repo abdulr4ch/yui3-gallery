@@ -554,4 +554,4 @@ YUI.add('gallery-yui-tooltip', function(Y) {
 	
 
 
-}, '@VERSION@' ,{requires:['selector-css3','overlay','transition','event-mouseenter']});
+}, 'gallery-2011.05.12-13-26' ,{requires:['selector-css3','overlay','transition','event-mouseenter']});
